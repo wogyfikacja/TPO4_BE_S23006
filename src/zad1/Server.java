@@ -80,6 +80,13 @@ public class Server {
                 String att = (String)sk.attachment();
 
                 switch (chopped[0]) {
+                    case "GET":
+                        String toSend = "";
+                        for(String topic : topics) {
+                            toSend = toSend +","+ topic;
+                        }
+                        out.write(toSend);
+                        break;
                     case "ADMINADD":
                         topics.add(chopped[1]);
                         out.write("Done adding " + chopped[1]);
@@ -89,7 +96,7 @@ public class Server {
                         out.write("Done deleting " + chopped[1]);
                         break;
                     case "ADMINWRITE":
-                        i.forEachRemaining((key) ->{
+                        i.forEachRemaining((key) -> {
                             if(((String)key.attachment()).contains(chopped[1])){
                                 ServerSocketChannel nex = (ServerSocketChannel) key
                                 .channel();
@@ -99,7 +106,6 @@ public class Server {
                                     toMess.write(chopped[2]);
                                     toMess.close();
                                 } catch (IOException e) {
-                                    // TODO Auto-generated catch block
                                     e.printStackTrace();
                                 }
                             }
